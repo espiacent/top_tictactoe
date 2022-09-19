@@ -12,7 +12,7 @@ h1 {
     font-size: 3rem;
 }
 
-.playing-board {
+.playingboard {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
@@ -22,50 +22,51 @@ h1 {
     text-align: center;
 }
 
-.playing-field {
+.playingfield {
     display: flex;
     border: 2px solid black;
     align-items: center;
     justify-content: center;
 }
 
-.field {
+[class^="field-"] { 
     display: block;
-    font-size: 5rem;
+    border: 1px solid red;
+    font-size: 7rem;
 }
 
-#one {
+#field-0 {
     border-left: none;
     border-top: none;
 }
 
-#two {
+#field-1 {
     border-top: none;
 }
 
-#three {
+#field-2 {
     border-top: none;
     border-right: none;
 }
 
-#four {
+#field-3 {
     border-left: none;
 }
 
-#six {
+#field-5 {
     border-right: none;
 }
 
-#seven {
+#field-6 {
     border-left: none;
     border-bottom: none;
 }
 
-#eight {
+#field-7 {
     border-bottom: none;
 }
 
-#nine {
+#field-8 {
     border-bottom: none;
     border-right: none;
 }

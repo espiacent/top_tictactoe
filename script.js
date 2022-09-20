@@ -18,7 +18,6 @@ const gameBoard = (function () {
 
     const move = (e) => {
         if (gameBoard.player == 1) {
-            console.log('player1');
             if (gameBoard.fields[e.target.id.at(-1)] == '') {
                 gameBoard.fields[e.target.id.at(-1)] = 'x';
                 gameBoard.player = 2;
@@ -29,7 +28,6 @@ const gameBoard = (function () {
             }
         }
         if (gameBoard.player == 2) {
-            console.log('player2');
             if (gameBoard.fields[e.target.id.at(-1)] == '') {
                 gameBoard.fields[e.target.id.at(-1)] = 'o';
                 gameBoard.player = 1;

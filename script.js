@@ -5,7 +5,7 @@ const gameBoard = (function () {
     let player = 1;
 
     const init = () => {
-        gameBoard.player = 1;
+        player = 1;
         const board = document.querySelector('.playingboard');
         for (let i = 0; i < gameBoard.fields.length; i++) {
             const square = document.createElement('div');
@@ -17,20 +17,20 @@ const gameBoard = (function () {
     }
 
     const move = (e) => {
-        if (gameBoard.player == 1) {
+        if (player == 1) {
             if (gameBoard.fields[e.target.id.at(-1)] == '') {
                 gameBoard.fields[e.target.id.at(-1)] = 'x';
-                gameBoard.player = 2;
+                player = 2;
                 const oldFields = document.querySelectorAll('.playingfield');
                 oldFields.forEach((oldfield) => { oldfield.remove() })
                 update();
                 gamePlay.checkwin();
             }
         }
-        if (gameBoard.player == 2) {
+        if (player == 2) {
             if (gameBoard.fields[e.target.id.at(-1)] == '') {
                 gameBoard.fields[e.target.id.at(-1)] = 'o';
-                gameBoard.player = 1;
+                player = 1;
                 const oldFields = document.querySelectorAll('.playingfield');
                 oldFields.forEach((oldfield) => { oldfield.remove() })
                 update();
@@ -54,7 +54,7 @@ const gameBoard = (function () {
         window.location.reload();
     };
 
-    return { fields, init, move, update, reset, player }
+    return { fields, init, move, reset }
 
 })();
 
@@ -130,7 +130,7 @@ const gamePlay = (function () {
             })
         }
     };
-    return { checkwin, winmsg }
+    return { checkwin }
 })();
 
 //EVENT LISTENERS

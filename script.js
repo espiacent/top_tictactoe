@@ -2,43 +2,51 @@
 const gameBoard = (function () {
 
     let fields = ['', '', '', '', '', '', '', '', ''];
+    let player = 1;
 
     const init = () => {
-        console.log('init')
+        gameBoard.player = 1;
         const board = document.querySelector('.playingboard');
-        for (let i = 0; i < fields.length; i++) {
+        for (let i = 0; i < gameBoard.fields.length; i++) {
             const square = document.createElement('div');
             square.classList.add('playingfield');
-            square.setAttribute("id", `field-${i}`)
+            square.setAttribute('id', `field-${i}`);
             square.textContent = fields[i];
             board.appendChild(square);
         }
     }
 
-    const click = (e) => {
-        console.log('click')
-        if (fields[e.target.id.at(-1)] === '' || fields[e.target.id.at(-1)] === 'o') {
-            fields[e.target.id.at(-1)] = 'x';
-            const oldFields = document.querySelectorAll('.playingfield');
-            oldFields.forEach((oldfield) => { oldfield.remove() })
-            update();
-            gamePlay.checkwin();
-        } else {
-            fields[e.target.id.at(-1)] = 'o';
-            const oldFields = document.querySelectorAll('.playingfield');
-            oldFields.forEach((oldfield) => { oldfield.remove() })
-            update();
-            gamePlay.checkwin();
+    const move = (e) => {
+        if (gameBoard.player == 1) {
+            console.log('player1');
+            if (gameBoard.fields[e.target.id.at(-1)] == '') {
+                gameBoard.fields[e.target.id.at(-1)] = 'x';
+                gameBoard.player = 2;
+                const oldFields = document.querySelectorAll('.playingfield');
+                oldFields.forEach((oldfield) => { oldfield.remove() })
+                update();
+                gamePlay.checkwin();
+            }
+        }
+        if (gameBoard.player == 2) {
+            console.log('player2');
+            if (gameBoard.fields[e.target.id.at(-1)] == '') {
+                gameBoard.fields[e.target.id.at(-1)] = 'o';
+                gameBoard.player = 1;
+                const oldFields = document.querySelectorAll('.playingfield');
+                oldFields.forEach((oldfield) => { oldfield.remove() })
+                update();
+                gamePlay.checkwin();
+            }
         }
     };
 
     const update = () => {
-        console.log('update')
         const board = document.querySelector('.playingboard');
-        for (let i = 0; i < fields.length; i++) {
+        for (let i = 0; i < gameBoard.fields.length; i++) {
             const square = document.createElement('div');
             square.classList.add('playingfield');
-            square.setAttribute('id', `field-${i}`)
+            square.setAttribute('id', `field-${i}`);
             square.textContent = fields[i];
             board.appendChild(square);
         }
@@ -48,7 +56,7 @@ const gameBoard = (function () {
         window.location.reload();
     };
 
-    return { fields, init, click, update, reset }
+    return { fields, init, move, update, reset, player }
 
 })();
 
@@ -56,7 +64,6 @@ const gameBoard = (function () {
 const gamePlay = (function () {
 
     const checkwin = () => {
-        console.log('checkwin')
         if (gameBoard.fields[0] == 'x' && gameBoard.fields[1] == 'x' && gameBoard.fields[2] == 'x') {
             winmsg('x');
         } if (gameBoard.fields[0] == 'o' && gameBoard.fields[1] == 'o' && gameBoard.fields[2] == 'o') {
@@ -65,12 +72,18 @@ const gamePlay = (function () {
     };
 
     const winmsg = (player) => {
+        // show modal
         const modal = document.querySelector('.modal-outer');
         const header = document.querySelector('.modal-header');
         header.textContent = `${player} wins!`;
         modal.classList.add('open');
-        console.log('winmsg')
-        console.log(`yeah, ${player} wins`)
+        // modal button
+        const btn = document.querySelector('.playbtn');
+        btn.addEventListener('click', () => {
+            const modal = document.querySelector('.modal-outer');
+            modal.classList.remove('open');
+            gameBoard.reset();
+        })
     };
     return { checkwin, winmsg }
 })();
@@ -79,17 +92,7 @@ const gamePlay = (function () {
 document.addEventListener('DOMContentLoaded', gameBoard.init)
 
 const board = document.querySelector('.playingboard');
-board.addEventListener('click', gameBoard.click);
-
-const btn = document.querySelector('.playbtn');
-btn.addEventListener('click', closeModal)
-
-function closeModal() {
-    const modal = document.querySelector('.modal-outer');
-    modal.classList.remove('open');
-    gameBoard.reset();
-}
-
+board.addEventListener('click', gameBoard.move);
 
 // const gameBoard = (function () {
 

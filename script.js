@@ -1,6 +1,6 @@
 (function () {
 
-    const filledFields = ['x', 'x', 'o', 'x', 'o', 'x', 'o', 'o', 'x'];
+    let filledFields = ['', '', '', '', '', '', '', '', ''];
 
     document.addEventListener('DOMContentLoaded', () => {
         const board = document.querySelector('.playingboard');
@@ -8,19 +8,25 @@
             const square = document.createElement('div');
             square.classList.add('playingfield');
             square.setAttribute("id", `field-${i}`)
-            const fill = document.createElement('span');
-            fill.classList.add(`field-${i}`);
-            fill.innerHTML = filledFields[i];
-            square.appendChild(fill);
+            square.textContent = filledFields[i];
             board.appendChild(square);
         }
     });
 
     function changeField(e) {
-        filledFields[e.target.id.at(-1)] = 'x';
-        const fields = document.querySelectorAll('.playingfield');
-        fields.forEach((field) => { field.remove() })
-        updateFields();
+        if (filledFields[e.target.id.at(-1)] === '' || filledFields[e.target.id.at(-1)] === 'o') {
+            filledFields[e.target.id.at(-1)] = 'x';
+            const oldFields = document.querySelectorAll('.playingfield');
+            oldFields.forEach((oldfield) => { oldfield.remove() })
+            updateFields();
+            checkWin();
+        } else {
+            filledFields[e.target.id.at(-1)] = 'o';
+            const oldFields = document.querySelectorAll('.playingfield');
+            oldFields.forEach((oldfield) => { oldfield.remove() })
+            updateFields();
+            checkWin();
+        }
     };
 
     function updateFields() {
@@ -28,13 +34,24 @@
         for (let i = 0; i < filledFields.length; i++) {
             const square = document.createElement('div');
             square.classList.add('playingfield');
-            square.setAttribute("id", `field-${i}`)
-            const fill = document.createElement('span');
-            fill.classList.add(`field-${i}`);
-            fill.innerHTML = filledFields[i];
-            square.appendChild(fill);
+            square.setAttribute('id', `field-${i}`)
+            square.textContent = filledFields[i];
             board.appendChild(square);
         }
+    };
+
+    function checkWin() {
+        if (filledFields[0] == 'x' && filledFields[1] == 'x' && filledFields[2] == 'x') {
+            winMsg('x');
+        } if (filledFields[0] == 'o' && filledFields[1] == 'o' && filledFields[2] == 'o') {
+            winMsg('o');
+        }
+    };
+
+    function winMsg(player) {
+        console.log(`yeah, ${player} wins`)
+        filledFields = ['', '', '', '', '', '', '', '', ''];
+        updateFields();
     };
 
     const board = document.querySelector('.playingboard');

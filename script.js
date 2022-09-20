@@ -1,63 +1,95 @@
-(function () {
+//GAMEBOARD UI
+const gameBoard = (function () {
 
-    let filledFields = ['', '', '', '', '', '', '', '', ''];
+    let fields = ['', '', '', '', '', '', '', '', ''];
 
-    document.addEventListener('DOMContentLoaded', () => {
+    const init = () => {
+        console.log('init')
         const board = document.querySelector('.playingboard');
-        for (let i = 0; i < filledFields.length; i++) {
+        for (let i = 0; i < fields.length; i++) {
             const square = document.createElement('div');
             square.classList.add('playingfield');
             square.setAttribute("id", `field-${i}`)
-            square.textContent = filledFields[i];
+            square.textContent = fields[i];
             board.appendChild(square);
         }
-    });
+    }
 
-    function changeField(e) {
-        if (filledFields[e.target.id.at(-1)] === '' || filledFields[e.target.id.at(-1)] === 'o') {
-            filledFields[e.target.id.at(-1)] = 'x';
+    const click = (e) => {
+        console.log('click')
+        if (fields[e.target.id.at(-1)] === '' || fields[e.target.id.at(-1)] === 'o') {
+            fields[e.target.id.at(-1)] = 'x';
             const oldFields = document.querySelectorAll('.playingfield');
             oldFields.forEach((oldfield) => { oldfield.remove() })
-            updateFields();
-            checkWin();
+            update();
+            gamePlay.checkwin();
         } else {
-            filledFields[e.target.id.at(-1)] = 'o';
+            fields[e.target.id.at(-1)] = 'o';
             const oldFields = document.querySelectorAll('.playingfield');
             oldFields.forEach((oldfield) => { oldfield.remove() })
-            updateFields();
-            checkWin();
+            update();
+            gamePlay.checkwin();
         }
     };
 
-    function updateFields() {
+    const update = () => {
+        console.log('update')
         const board = document.querySelector('.playingboard');
-        for (let i = 0; i < filledFields.length; i++) {
+        for (let i = 0; i < fields.length; i++) {
             const square = document.createElement('div');
             square.classList.add('playingfield');
             square.setAttribute('id', `field-${i}`)
-            square.textContent = filledFields[i];
+            square.textContent = fields[i];
             board.appendChild(square);
         }
     };
 
-    function checkWin() {
-        if (filledFields[0] == 'x' && filledFields[1] == 'x' && filledFields[2] == 'x') {
-            winMsg('x');
-        } if (filledFields[0] == 'o' && filledFields[1] == 'o' && filledFields[2] == 'o') {
-            winMsg('o');
+    const reset = () => {
+        window.location.reload();
+    };
+
+    return { fields, init, click, update, reset }
+
+})();
+
+//GAMEPLAY FUNCTIONS
+const gamePlay = (function () {
+
+    const checkwin = () => {
+        console.log('checkwin')
+        if (gameBoard.fields[0] == 'x' && gameBoard.fields[1] == 'x' && gameBoard.fields[2] == 'x') {
+            winmsg('x');
+        } if (gameBoard.fields[0] == 'o' && gameBoard.fields[1] == 'o' && gameBoard.fields[2] == 'o') {
+            winmsg('o');
         }
     };
 
-    function winMsg(player) {
+    const winmsg = (player) => {
+        const modal = document.querySelector('.modal-outer');
+        const header = document.querySelector('.modal-header');
+        header.textContent = `${player} wins!`;
+        modal.classList.add('open');
+        console.log('winmsg')
         console.log(`yeah, ${player} wins`)
-        filledFields = ['', '', '', '', '', '', '', '', ''];
-        updateFields();
     };
-
-    const board = document.querySelector('.playingboard');
-    board.addEventListener('click', changeField);
-
+    return { checkwin, winmsg }
 })();
+
+//EVENT LISTENERS
+document.addEventListener('DOMContentLoaded', gameBoard.init)
+
+const board = document.querySelector('.playingboard');
+board.addEventListener('click', gameBoard.click);
+
+const btn = document.querySelector('.playbtn');
+btn.addEventListener('click', closeModal)
+
+function closeModal() {
+    const modal = document.querySelector('.modal-outer');
+    modal.classList.remove('open');
+    gameBoard.reset();
+}
+
 
 // const gameBoard = (function () {
 

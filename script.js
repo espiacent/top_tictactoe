@@ -43,6 +43,8 @@ const gamePlay = (function () {
             gameBoard.fields[e.target.id.at(-1)] = 'x';
             gameBoard.update();
             checkwin();
+            const page = document.querySelector('body');
+            page.style.pointerEvents = 'none'
             pausing(1000).then(() => aimove());
         }
     };
@@ -60,7 +62,10 @@ const gamePlay = (function () {
         let random = emptyfields[Math.floor((Math.random() * emptyfields.length))];
         gameBoard.fields[random] = 'o';
         gameBoard.update();
+        const page = document.querySelector('body');
+        page.style.pointerEvents = 'auto'
         checkwin();
+
     };
 
 

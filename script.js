@@ -42,10 +42,9 @@ const gamePlay = (function () {
         if (gameBoard.fields[e.target.id.at(-1)] == '') {
             gameBoard.fields[e.target.id.at(-1)] = 'x';
             gameBoard.update();
-            checkwin();
             const page = document.querySelector('body');
             page.style.pointerEvents = 'none'
-            pausing(1000).then(() => aimove());
+            checkplayerwin();
         }
     };
 
@@ -64,12 +63,53 @@ const gamePlay = (function () {
         gameBoard.update();
         const page = document.querySelector('body');
         page.style.pointerEvents = 'auto'
-        checkwin();
-
+        checkaiwin();
     };
 
 
-    const checkwin = () => {
+    const checkplayerwin = () => {
+        if (gameBoard.fields[0] == 'x' && gameBoard.fields[1] == 'x' && gameBoard.fields[2] == 'x') {
+            winmsg('x');
+        } else if (gameBoard.fields[0] == 'o' && gameBoard.fields[1] == 'o' && gameBoard.fields[2] == 'o') {
+            winmsg('o');
+        } else if (gameBoard.fields[3] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[5] == 'x') {
+            winmsg('x');
+        } else if (gameBoard.fields[3] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[5] == 'o') {
+            winmsg('o');
+        } else if (gameBoard.fields[6] == 'x' && gameBoard.fields[7] == 'x' && gameBoard.fields[8] == 'x') {
+            winmsg('x');
+        } else if (gameBoard.fields[6] == 'o' && gameBoard.fields[7] == 'o' && gameBoard.fields[8] == 'o') {
+            winmsg('o');
+        } else if (gameBoard.fields[0] == 'x' && gameBoard.fields[3] == 'x' && gameBoard.fields[6] == 'x') {
+            winmsg('x');
+        } else if (gameBoard.fields[0] == 'o' && gameBoard.fields[3] == 'o' && gameBoard.fields[6] == 'o') {
+            winmsg('o');
+        } else if (gameBoard.fields[1] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[7] == 'x') {
+            winmsg('x');
+        } else if (gameBoard.fields[1] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[7] == 'o') {
+            winmsg('o');
+        } else if (gameBoard.fields[2] == 'x' && gameBoard.fields[5] == 'x' && gameBoard.fields[8] == 'x') {
+            winmsg('x');
+        } else if (gameBoard.fields[2] == 'o' && gameBoard.fields[5] == 'o' && gameBoard.fields[8] == 'o') {
+            winmsg('o');
+        } else if (gameBoard.fields[0] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[8] == 'x') {
+            winmsg('x');
+        } else if (gameBoard.fields[0] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[8] == 'o') {
+            winmsg('o');
+        } else if (gameBoard.fields[2] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[6] == 'x') {
+            winmsg('x');
+        } else if (gameBoard.fields[2] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[6] == 'o') {
+            winmsg('o');
+        } else if (gameBoard.fields[0] == 'x' && gameBoard.fields[1] == 'x' && gameBoard.fields[2] == 'x') {
+            winmsg('x');
+        } else if (gameBoard.fields.every(field => field !== '')) {
+            winmsg('draw');
+        } else {
+            pausing(1000).then(() => aimove());
+        }
+    };
+
+    const checkaiwin = () => {
         if (gameBoard.fields[0] == 'x' && gameBoard.fields[1] == 'x' && gameBoard.fields[2] == 'x') {
             winmsg('x');
         } else if (gameBoard.fields[0] == 'o' && gameBoard.fields[1] == 'o' && gameBoard.fields[2] == 'o') {
@@ -110,6 +150,8 @@ const gamePlay = (function () {
     };
 
     const winmsg = (player) => {
+        const page = document.querySelector('body');
+        page.style.pointerEvents = 'auto'
         if (player == 'draw') {
             // show modal
             const modal = document.querySelector('.modal-outer');
@@ -138,7 +180,7 @@ const gamePlay = (function () {
             })
         }
     };
-    return { checkwin, playermove }
+    return { playermove }
 })();
 
 //EVENT LISTENERS

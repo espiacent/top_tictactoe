@@ -2,50 +2,27 @@
 const gameBoard = (function () {
 
     let fields = ['', '', '', '', '', '', '', '', ''];
-    let player = 1;
 
     const init = () => {
-        player = 1;
         const board = document.querySelector('.playingboard');
-        for (let i = 0; i < gameBoard.fields.length; i++) {
+        for (let i = 0; i < fields.length; i++) {
             const square = document.createElement('div');
             square.classList.add('playingfield');
             square.setAttribute('id', `field-${i}`);
-            square.textContent = fields[i];
+            square.innerText = fields[i];
             board.appendChild(square);
         }
     }
 
-    const move = (e) => {
-        if (player == 1) {
-            if (gameBoard.fields[e.target.id.at(-1)] == '') {
-                gameBoard.fields[e.target.id.at(-1)] = 'x';
-                player = 2;
-                const oldFields = document.querySelectorAll('.playingfield');
-                oldFields.forEach((oldfield) => { oldfield.remove() })
-                update();
-                gamePlay.checkwin();
-            }
-        }
-        if (player == 2) {
-            if (gameBoard.fields[e.target.id.at(-1)] == '') {
-                gameBoard.fields[e.target.id.at(-1)] = 'o';
-                player = 1;
-                const oldFields = document.querySelectorAll('.playingfield');
-                oldFields.forEach((oldfield) => { oldfield.remove() })
-                update();
-                gamePlay.checkwin();
-            }
-        }
-    };
-
     const update = () => {
+        const oldfields = document.querySelectorAll('.playingfield');
+        oldfields.forEach((oldfield) => { oldfield.remove() });
         const board = document.querySelector('.playingboard');
-        for (let i = 0; i < gameBoard.fields.length; i++) {
+        for (let i = 0; i < fields.length; i++) {
             const square = document.createElement('div');
             square.classList.add('playingfield');
             square.setAttribute('id', `field-${i}`);
-            square.textContent = fields[i];
+            square.innerText = fields[i];
             board.appendChild(square);
         }
     };
@@ -54,12 +31,38 @@ const gameBoard = (function () {
         window.location.reload();
     };
 
-    return { fields, init, move, reset }
+    return { fields, init, reset, update }
 
 })();
 
 //GAMEPLAY FUNCTIONS
 const gamePlay = (function () {
+
+    const playermove = (e) => {
+        if (gameBoard.fields[e.target.id.at(-1)] == '') {
+            gameBoard.fields[e.target.id.at(-1)] = 'x';
+            gameBoard.update();
+            checkwin();
+            pausing(1000).then(() => aimove());
+        }
+    };
+
+    const pausing = (time) => {
+        return new Promise(resolve => setTimeout(resolve, time));
+    }
+
+    const aimove = () => {
+        let emptyfields = gameBoard.fields.map((element, index) => {
+            if (element == '') {
+                return index;
+            }
+        }).filter(element => element >= 0);
+        let random = emptyfields[Math.floor((Math.random() * emptyfields.length))];
+        gameBoard.fields[random] = 'o';
+        gameBoard.update();
+        checkwin();
+    };
+
 
     const checkwin = () => {
         if (gameBoard.fields[0] == 'x' && gameBoard.fields[1] == 'x' && gameBoard.fields[2] == 'x') {
@@ -130,11 +133,11 @@ const gamePlay = (function () {
             })
         }
     };
-    return { checkwin }
+    return { checkwin, playermove }
 })();
 
 //EVENT LISTENERS
 document.addEventListener('DOMContentLoaded', gameBoard.init)
 
 const board = document.querySelector('.playingboard');
-board.addEventListener('click', gameBoard.move);
+board.addEventListener('mouseup', gamePlay.playermove);

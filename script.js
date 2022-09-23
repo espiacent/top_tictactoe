@@ -1,12 +1,12 @@
 //GAMEPLAY FUNCTIONS
 const gamePlay = (function () {
 
-    const gameover = false;
-    const player = 'player';
+    let gameover = false;
+    let player = 'player';
+    let brain = 'stupid';
 
     const playermove = (e) => {
         console.log('playermove');
-        console.log(e.target.id.at(-1));
         gamePlay.player = 'player';
         gamePlay.gameover = false;
         if (gameBoard.fields[e.target.id.at(-1)] == '') {
@@ -132,6 +132,9 @@ const gameBoard = (function () {
 
     const init = () => {
         console.log('init');
+        gamePlay.brain = 'stupid';
+        const other = document.querySelector('.stupid')
+        other.classList.add('highlight');
         const board = document.querySelector('.playingboard');
         for (let i = 0; i < fields.length; i++) {
             const square = document.createElement('div');
@@ -180,3 +183,23 @@ document.addEventListener('DOMContentLoaded', gameBoard.init)
 
 const board = document.querySelector('.playingboard');
 board.addEventListener('mouseup', gamePlay.playermove);
+
+const choicebtn = document.querySelector('.choicebtn');
+choicebtn.addEventListener('mouseup', highlight);
+
+function highlight(e) {
+    if (e.originalTarget.className == 'stupid') {
+        e.originalTarget.classList.add('highlight');
+        const other = document.querySelector('.smart')
+        other.classList.remove('highlight');
+        gamePlay.brain = 'stupid';
+        gameBoard.reset();
+
+    } if (e.originalTarget.className == 'smart') {
+        e.originalTarget.classList.add('highlight');
+        const other = document.querySelector('.stupid')
+        other.classList.remove('highlight');
+        gamePlay.brain = 'smart';
+        gameBoard.reset();
+    }
+}

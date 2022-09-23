@@ -161,6 +161,7 @@ const gameBoard = (function () {
     const reset = () => {
         console.log('reset');
         gamePlay.gameover = false;
+        gamePlay.player = 'player';
         gameBoard.fields = ['', '', '', '', '', '', '', '', ''];
         fields = ['', '', '', '', '', '', '', '', ''];
         const board = document.querySelector('.playingboard');

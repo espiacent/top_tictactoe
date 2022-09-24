@@ -126,7 +126,8 @@ const gamePlay = (function () {
 //GAMEBOARD UI
 const gameBoard = (function () {
 
-    let fields = ['o', 'o', '', 'x', '', '', 'x', '', ''];
+    // let fields = ['o', 'o', '', 'x', '', '', 'x', '', ''];
+    let fields = ['', '', '', '', '', '', '', '', ''];
 
     const init = () => {
         console.log('init');

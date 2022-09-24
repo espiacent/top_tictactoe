@@ -30,20 +30,23 @@ const gamePlay = (function () {
     const aimove = () => {
         console.log('aimove');
         gamePlay.player = 'ai';
-        gamePlay.emptyfields = gameBoard.fields.map((element, index) => {
-            if (element == '') {
-                return index;
-            }
-        }).filter(element => element >= 0);
-        let random = gamePlay.emptyfields[Math.floor((Math.random() * gamePlay.emptyfields.length))];
-        gameBoard.fields[random] = 'o';
+        if (findBestMove(gameBoard.fields) == -1) {
+            gamePlay.emptyfields = gameBoard.fields.map((element, index) => {
+                if (element == '') {
+                    return index;
+                }
+            }).filter(element => element >= 0);
+            let random = gamePlay.emptyfields[Math.floor((Math.random() * gamePlay.emptyfields.length))];
+            gameBoard.fields[random] = 'o';
+        } else {
+            gameBoard.fields[findBestMove(gameBoard.fields)] = 'o';
+        }
         gameBoard.update();
         const page = document.querySelector('body');
         page.style.pointerEvents = 'auto'
         checkwin();
         gameBoard.update();
     };
-
 
     const checkwin = () => {
         console.log('checkwin');
@@ -120,13 +123,164 @@ const gamePlay = (function () {
         }
     }
 
-    return { playermove }
+    const evaluate = () => {
+        console.log('evaluate');
+        if (gameBoard.fields[0] == 'x' && gameBoard.fields[1] == 'x' && gameBoard.fields[2] == 'x') {
+            return +10;
+        } else if (gameBoard.fields[0] == 'o' && gameBoard.fields[1] == 'o' && gameBoard.fields[2] == 'o') {
+            return -10;
+        } else if (gameBoard.fields[3] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[5] == 'x') {
+            return +10;
+        } else if (gameBoard.fields[3] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[5] == 'o') {
+            return -10;
+        } else if (gameBoard.fields[6] == 'x' && gameBoard.fields[7] == 'x' && gameBoard.fields[8] == 'x') {
+            return +10;
+        } else if (gameBoard.fields[6] == 'o' && gameBoard.fields[7] == 'o' && gameBoard.fields[8] == 'o') {
+            return -10;
+        } else if (gameBoard.fields[0] == 'x' && gameBoard.fields[3] == 'x' && gameBoard.fields[6] == 'x') {
+            return +10;
+        } else if (gameBoard.fields[0] == 'o' && gameBoard.fields[3] == 'o' && gameBoard.fields[6] == 'o') {
+            return -10;
+        } else if (gameBoard.fields[1] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[7] == 'x') {
+            return +10;
+        } else if (gameBoard.fields[1] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[7] == 'o') {
+            return -10;
+        } else if (gameBoard.fields[2] == 'x' && gameBoard.fields[5] == 'x' && gameBoard.fields[8] == 'x') {
+            return +10;
+        } else if (gameBoard.fields[2] == 'o' && gameBoard.fields[5] == 'o' && gameBoard.fields[8] == 'o') {
+            return -10;
+        } else if (gameBoard.fields[0] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[8] == 'x') {
+            return +10;
+        } else if (gameBoard.fields[0] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[8] == 'o') {
+            return -10;
+        } else if (gameBoard.fields[2] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[6] == 'x') {
+            return +10;
+        } else if (gameBoard.fields[2] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[6] == 'o') {
+            return -10;
+        } else if (gameBoard.fields[0] == 'x' && gameBoard.fields[1] == 'x' && gameBoard.fields[2] == 'x') {
+            return +10;
+        } else if (gameBoard.fields.every(field => field !== '')) {
+            return 0;
+        }
+    };
+
+
+    const minimax = (board, depth, isMax) => {
+        console.log('minimax');
+        let score = gamePlay.evaluate(board);
+
+        if (score == 10)
+            return score;
+
+        if (score == -10)
+            return score;
+
+        if (score == 0)
+            return score;
+
+        if (isMax) {
+            let best = -1000;
+
+            // Traverse all cells
+            for (let i = 0; i < 9; i++) {
+
+                // Check if cell is empty
+                if (board[i] == '_') {
+
+                    // Make the move
+                    board[i] = 'x';
+
+                    // Call minimax recursively
+                    // and choose the maximum value
+                    best = Math.max(best, minimax(board,
+                        depth + 1, !isMax));
+
+                    // Undo the move
+                    board[i] = '';
+                }
+            }
+            console.log(board);
+            console.log(best);
+            return best;
+        }
+
+        // If this minimizer's move
+        else {
+            let best = 1000;
+
+            // Traverse all cells
+            for (let i = 0; i < 9; i++) {
+
+                // Check if cell is empty
+                if (board[i] == '') {
+
+                    // Make the move
+                    board[i] = 'o';
+
+                    // Call minimax recursively and
+                    // choose the minimum value
+                    best = Math.min(best, minimax(board,
+                        depth + 1, !isMax));
+
+                    // Undo the move
+                    board[i] = '';
+                }
+            }
+            console.log(board);
+            console.log(best);
+            return best;
+        }
+    }
+
+    // This will return the best possible
+    // move for the player
+    const findBestMove = (board) => {
+        console.log('findbestmove');
+        let bestVal = -1000;
+        let bestMove = {};
+        bestMove.index = -1;
+
+        // Traverse all cells, evaluate
+        // minimax function for all empty
+        // cells. And return the cell
+        // with optimal value.
+        for (let i = 0; i < 9; i++) {
+
+            // Check if cell is empty
+            if (board[i] == '') {
+
+                // Make the move
+                board[i] = 'x';
+
+                // compute evaluation function
+                // for this move.
+                let moveVal = minimax(gameBoard.fields, 0, false);
+
+                // Undo the move
+                board[i] = '';
+
+                // If the value of the current move
+                // is more than the best value, then
+                // update best
+                if (moveVal > bestVal) {
+                    bestMove.index = i;
+                    bestVal = moveVal;
+                }
+            }
+        }
+
+        console.log(bestMove);
+
+        return bestMove.index;
+    }
+
+    return { playermove, evaluate, minimax, findBestMove }
 })();
 
 //GAMEBOARD UI
 const gameBoard = (function () {
 
-    // let fields = ['o', 'o', '', 'x', '', '', 'x', '', ''];
+    // let fields = ['x', 'o', '', '', '', '', '', '', ''];
     let fields = ['', '', '', '', '', '', '', '', ''];
 
     const init = () => {

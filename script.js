@@ -1,14 +1,7 @@
 //GAMEPLAY FUNCTIONS
 const gamePlay = (function () {
 
-    let gameover = false;
-    let player = 'player';
-    let brain = 'stupid';
-    let emptyfields = [];
-
     const playermove = (e) => {
-        console.log('playermove');
-        gamePlay.player = 'player';
         gamePlay.gameover = false;
         if (gameBoard.fields[e.target.id.at(-1)] == '') {
             gameBoard.fields[e.target.id.at(-1)] = 'x';
@@ -23,33 +16,32 @@ const gamePlay = (function () {
     };
 
     const pausing = (time) => {
-        console.log('pausing');
         return new Promise(resolve => setTimeout(resolve, time));
     }
 
     const aimove = () => {
-        console.log('aimove');
-        gamePlay.player = 'ai';
-        if (findBestMove(gameBoard.fields) == -1) {
-            gamePlay.emptyfields = gameBoard.fields.map((element, index) => {
-                if (element == '') {
-                    return index;
-                }
-            }).filter(element => element >= 0);
-            let random = gamePlay.emptyfields[Math.floor((Math.random() * gamePlay.emptyfields.length))];
-            gameBoard.fields[random] = 'o';
-        } else {
-            gameBoard.fields[findBestMove(gameBoard.fields)] = 'o';
+        if (window.brain == 0) {
+            if (findbestmove(gameBoard.fields) == -1) {
+                gamePlay.emptyfields = gameBoard.fields.map((element, index) => {
+                    if (element == '') {
+                        return index;
+                    }
+                }).filter(element => element >= 0);
+                let random = gamePlay.emptyfields[Math.floor((Math.random() * gamePlay.emptyfields.length))];
+                gameBoard.fields[random] = 'o';
+            } else {
+                gameBoard.fields[findbestmove(gameBoard.fields)] = 'o';
+            }
+        } else if (window.brain == 1) {
+            console.log('unbeatable');
         }
         gameBoard.update();
         const page = document.querySelector('body');
         page.style.pointerEvents = 'auto'
         checkwin();
-        gameBoard.update();
     };
 
     const checkwin = () => {
-        console.log('checkwin');
         if (gameBoard.fields[0] == 'x' && gameBoard.fields[1] == 'x' && gameBoard.fields[2] == 'x') {
             winmsg('x');
         } else if (gameBoard.fields[0] == 'o' && gameBoard.fields[1] == 'o' && gameBoard.fields[2] == 'o') {
@@ -90,7 +82,6 @@ const gamePlay = (function () {
     };
 
     const winmsg = (player) => {
-        console.log('winmsg');
         gamePlay.gameover = true;
         const page = document.querySelector('body');
         page.style.pointerEvents = 'auto'
@@ -124,7 +115,6 @@ const gamePlay = (function () {
     }
 
     const evaluate = () => {
-        console.log('evaluate');
         if (gameBoard.fields[0] == 'x' && gameBoard.fields[1] == 'x' && gameBoard.fields[2] == 'x') {
             return +10;
         } else if (gameBoard.fields[0] == 'o' && gameBoard.fields[1] == 'o' && gameBoard.fields[2] == 'o') {
@@ -164,127 +154,74 @@ const gamePlay = (function () {
         }
     };
 
-
-    const minimax = (board, depth, isMax) => {
-        console.log('minimax');
+    const minimax = (board, depth, max) => {
         let score = gamePlay.evaluate(board);
 
         if (score == 10)
             return score;
-
         if (score == -10)
             return score;
-
         if (score == 0)
             return score;
+        if (max == true) {
+            let best = -100;
 
-        if (isMax) {
-            let best = -1000;
-
-            // Traverse all cells
             for (let i = 0; i < 9; i++) {
 
-                // Check if cell is empty
                 if (board[i] == '_') {
-
-                    // Make the move
                     board[i] = 'x';
-
-                    // Call minimax recursively
-                    // and choose the maximum value
                     best = Math.max(best, minimax(board,
-                        depth + 1, !isMax));
-
-                    // Undo the move
+                        depth + 1, !max));
                     board[i] = '';
                 }
             }
-            console.log(board);
-            console.log(best);
             return best;
         }
-
-        // If this minimizer's move
         else {
-            let best = 1000;
-
-            // Traverse all cells
+            let best = 100;
             for (let i = 0; i < 9; i++) {
 
-                // Check if cell is empty
                 if (board[i] == '') {
-
-                    // Make the move
                     board[i] = 'o';
-
-                    // Call minimax recursively and
-                    // choose the minimum value
                     best = Math.min(best, minimax(board,
-                        depth + 1, !isMax));
+                        depth + 1, true));
 
-                    // Undo the move
                     board[i] = '';
                 }
             }
-            console.log(board);
-            console.log(best);
             return best;
         }
     }
 
-    // This will return the best possible
-    // move for the player
-    const findBestMove = (board) => {
-        console.log('findbestmove');
-        let bestVal = -1000;
-        let bestMove = {};
-        bestMove.index = -1;
+    const findbestmove = (board) => {
+        let bestval = -1000;
+        let bestmove = -1;
 
-        // Traverse all cells, evaluate
-        // minimax function for all empty
-        // cells. And return the cell
-        // with optimal value.
         for (let i = 0; i < 9; i++) {
 
-            // Check if cell is empty
             if (board[i] == '') {
-
-                // Make the move
                 board[i] = 'x';
-
-                // compute evaluation function
-                // for this move.
-                let moveVal = minimax(gameBoard.fields, 0, false);
-
-                // Undo the move
+                let moveval = minimax(board, 0, false);
                 board[i] = '';
 
-                // If the value of the current move
-                // is more than the best value, then
-                // update best
-                if (moveVal > bestVal) {
-                    bestMove.index = i;
-                    bestVal = moveVal;
+                if (moveval > bestval) {
+                    bestmove = i;
+                    bestval = moveval;
                 }
             }
         }
-
-        console.log(bestMove);
-
-        return bestMove.index;
+        return bestmove;
     }
 
-    return { playermove, evaluate, minimax, findBestMove }
+    return { playermove, evaluate, minimax, findbestmove }
 })();
 
 //GAMEBOARD UI
 const gameBoard = (function () {
 
-    // let fields = ['x', 'o', '', '', '', '', '', '', ''];
     let fields = ['', '', '', '', '', '', '', '', ''];
 
     const init = () => {
-        console.log('init');
         gamePlay.brain = 'stupid';
         const other = document.querySelector('.stupid')
         other.classList.add('highlight');
@@ -299,7 +236,6 @@ const gameBoard = (function () {
     }
 
     const update = () => {
-        console.log('update');
         const board = document.querySelector('.playingboard');
         board.innerHTML = '';
         for (let i = 0; i < gameBoard.fields.length; i++) {
@@ -312,9 +248,7 @@ const gameBoard = (function () {
     };
 
     const reset = () => {
-        console.log('reset');
         gamePlay.gameover = false;
-        gamePlay.player = 'player';
         gameBoard.fields = ['', '', '', '', '', '', '', '', ''];
         fields = ['', '', '', '', '', '', '', '', ''];
         const board = document.querySelector('.playingboard');
@@ -333,6 +267,8 @@ const gameBoard = (function () {
 })();
 
 //EVENT LISTENERS
+window.brain = 0;
+
 document.addEventListener('DOMContentLoaded', gameBoard.init)
 
 const board = document.querySelector('.playingboard');
@@ -346,14 +282,16 @@ function highlight(e) {
         e.originalTarget.classList.add('highlight');
         const other = document.querySelector('.smart')
         other.classList.remove('highlight');
-        gamePlay.brain = 'stupid';
+        window.brain = 0;
         gameBoard.reset();
 
     } if (e.originalTarget.className == 'smart') {
         e.originalTarget.classList.add('highlight');
         const other = document.querySelector('.stupid')
         other.classList.remove('highlight');
-        gamePlay.brain = 'smart';
+        window.brain = 1;
         gameBoard.reset();
     }
 }
+
+

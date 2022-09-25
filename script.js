@@ -154,45 +154,6 @@ const gamePlay = (function () {
         }
     };
 
-    const minimax = (board, depth, max) => {
-        let score = gamePlay.evaluate(board);
-
-        if (score == 10)
-            return score;
-        if (score == -10)
-            return score;
-        if (score == 0)
-            return score;
-        if (max == true) {
-            let best = -100;
-
-            for (let i = 0; i < 9; i++) {
-
-                if (board[i] == '_') {
-                    board[i] = 'x';
-                    best = Math.max(best, minimax(board,
-                        depth + 1, !max));
-                    board[i] = '';
-                }
-            }
-            return best;
-        }
-        else {
-            let best = 100;
-            for (let i = 0; i < 9; i++) {
-
-                if (board[i] == '') {
-                    board[i] = 'o';
-                    best = Math.min(best, minimax(board,
-                        depth + 1, true));
-
-                    board[i] = '';
-                }
-            }
-            return best;
-        }
-    }
-
     const findbestmove = (board) => {
         let bestval = -1000;
         let bestmove = -1;
@@ -213,6 +174,41 @@ const gamePlay = (function () {
         return bestmove;
     }
 
+    const minimax = (board, depth, max) => {
+        let score = gamePlay.evaluate(board);
+
+        if (score == 10)
+            return score;
+        if (score == -10)
+            return score;
+        if (score == 0)
+            return score;
+        if (max == true) {
+            let best = -100;
+
+            for (let i = 0; i < 9; i++) {
+
+                if (board[i] == '_') {
+                    board[i] = 'x';
+                    best = Math.max(best, minimax(board, depth + 1, false));
+                    board[i] = '';
+                }
+            }
+            return best;
+        }
+        else {
+            let best = 100;
+            for (let i = 0; i < 9; i++) {
+
+                if (board[i] == '') {
+                    board[i] = 'o';
+                    best = Math.min(best, minimax(board, depth + 1, true));
+                    board[i] = '';
+                }
+            }
+            return best;
+        }
+    }
     return { playermove, evaluate, minimax, findbestmove }
 })();
 
@@ -261,7 +257,6 @@ const gameBoard = (function () {
             board.appendChild(square);
         }
     };
-
     return { fields, init, reset, update }
 
 })();
@@ -293,5 +288,3 @@ function highlight(e) {
         gameBoard.reset();
     }
 }
-
-

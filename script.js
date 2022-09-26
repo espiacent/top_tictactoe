@@ -21,19 +21,15 @@ const gamePlay = (function () {
 
     const aimove = () => {
         if (window.brain == 0) {
-            if (findbestmove(gameBoard.fields) == -1) {
-                gamePlay.emptyfields = gameBoard.fields.map((element, index) => {
-                    if (element == '') {
-                        return index;
-                    }
-                }).filter(element => element >= 0);
-                let random = gamePlay.emptyfields[Math.floor((Math.random() * gamePlay.emptyfields.length))];
-                gameBoard.fields[random] = 'o';
-            } else {
-                gameBoard.fields[findbestmove(gameBoard.fields)] = 'o';
-            }
+            gamePlay.emptyfields = gameBoard.fields.map((element, index) => {
+                if (element == '') {
+                    return index;
+                }
+            }).filter(element => element >= 0);
+            let random = gamePlay.emptyfields[Math.floor((Math.random() * gamePlay.emptyfields.length))];
+            gameBoard.fields[random] = 'o';
         } else if (window.brain == 1) {
-            console.log('unbeatable');
+            gameBoard.fields[findbestmove(gameBoard.fields)] = 'o';
         }
         gameBoard.update();
         const page = document.querySelector('body');
@@ -149,8 +145,6 @@ const gamePlay = (function () {
             return -10;
         } else if (gameBoard.fields[0] == 'x' && gameBoard.fields[1] == 'x' && gameBoard.fields[2] == 'x') {
             return +10;
-        } else if (gameBoard.fields.every(field => field !== '')) {
-            return 0;
         }
     };
 
@@ -162,7 +156,8 @@ const gamePlay = (function () {
 
             if (board[i] == '') {
                 board[i] = 'x';
-                let moveval = minimax(board, 0, false);
+                let moveval = minimax(board, 8, true);
+                console.log('MOVEVAL :' + moveval);
                 board[i] = '';
 
                 if (moveval > bestval) {
@@ -171,6 +166,7 @@ const gamePlay = (function () {
                 }
             }
         }
+        console.log('BEST :' + bestmove);
         return bestmove;
     }
 
@@ -181,32 +177,35 @@ const gamePlay = (function () {
             return score;
         if (score == -10)
             return score;
-        if (score == 0)
-            return score;
+        if (gameBoard.fields.every(field => field !== '') == true) return 0;
         if (max == true) {
-            let best = -100;
+            let best = -Infinity;
 
             for (let i = 0; i < 9; i++) {
 
-                if (board[i] == '_') {
+                if (board[i] == '') {
                     board[i] = 'x';
-                    best = Math.max(best, minimax(board, depth + 1, false));
+                    best = Math.max(best, minimax(board, depth - 1, false));
                     board[i] = '';
                 }
             }
-            return best;
+            let result = best - depth;
+            console.log('MAX:' + result);
+            return result;
         }
-        else {
-            let best = 100;
+        else if (max == false) {
+            let best = Infinity;
             for (let i = 0; i < 9; i++) {
 
                 if (board[i] == '') {
                     board[i] = 'o';
-                    best = Math.min(best, minimax(board, depth + 1, true));
+                    best = Math.min(best, minimax(board, depth - 1, true));
                     board[i] = '';
                 }
             }
-            return best;
+            let result = best + depth;
+            console.log('MIN:' + result);
+            return result;
         }
     }
     return { playermove, evaluate, minimax, findbestmove }

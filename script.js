@@ -103,7 +103,7 @@ const gamePlay = (function () {
             // show modal
             const modal = document.querySelector('.modal-outer');
             const header = document.querySelector('.modal-header');
-            header.textContent = 'Round draw';
+            header.textContent = 'Round draw!';
             modal.classList.add('open');
             // modal button
             const btn = document.querySelector('.playbtn');

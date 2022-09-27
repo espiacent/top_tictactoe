@@ -155,7 +155,6 @@ const gamePlay = (function () {
     }
 
     const findbestmove = (board) => {
-        // let depth = window.depth;
         let bestval = -Infinity;
         let bestmove;
         for (let i = 0; i < 9; i++) {

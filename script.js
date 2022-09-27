@@ -21,14 +21,32 @@ const gamePlay = (function () {
 
     const aimove = () => {
         if (window.brain == 0) {
-            gamePlay.emptyfields = gameBoard.fields.map((element, index) => {
-                if (element == '') {
-                    return index;
-                }
-            }).filter(element => element >= 0);
-            let random = gamePlay.emptyfields[Math.floor((Math.random() * gamePlay.emptyfields.length))];
-            gameBoard.fields[random] = 'o';
-        } else if (window.brain == 1) {
+            if (Math.random() < 0.5) {
+                gameBoard.fields[findbestmove(gameBoard.fields)] = 'o';
+            } else {
+                gamePlay.emptyfields = gameBoard.fields.map((element, index) => {
+                    if (element == '') {
+                        return index;
+                    }
+                }).filter(element => element >= 0);
+                let random = gamePlay.emptyfields[Math.floor((Math.random() * gamePlay.emptyfields.length))];
+                gameBoard.fields[random] = 'o';
+            }
+        }
+        if (window.brain == 1) {
+            if (Math.random() < 0.8) {
+                gameBoard.fields[findbestmove(gameBoard.fields)] = 'o';
+            } else {
+                gamePlay.emptyfields = gameBoard.fields.map((element, index) => {
+                    if (element == '') {
+                        return index;
+                    }
+                }).filter(element => element >= 0);
+                let random = gamePlay.emptyfields[Math.floor((Math.random() * gamePlay.emptyfields.length))];
+                gameBoard.fields[random] = 'o';
+            }
+        }
+        if (window.brain == 2) {
             gameBoard.fields[findbestmove(gameBoard.fields)] = 'o';
         }
         gameBoard.update();
@@ -110,111 +128,89 @@ const gamePlay = (function () {
         }
     }
 
-    const evaluate = () => {
-        if (gameBoard.fields[0] == 'x' && gameBoard.fields[1] == 'x' && gameBoard.fields[2] == 'x') {
-            return +10;
-        } else if (gameBoard.fields[0] == 'o' && gameBoard.fields[1] == 'o' && gameBoard.fields[2] == 'o') {
-            return -10;
-        } else if (gameBoard.fields[3] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[5] == 'x') {
-            return +10;
-        } else if (gameBoard.fields[3] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[5] == 'o') {
-            return -10;
-        } else if (gameBoard.fields[6] == 'x' && gameBoard.fields[7] == 'x' && gameBoard.fields[8] == 'x') {
-            return +10;
-        } else if (gameBoard.fields[6] == 'o' && gameBoard.fields[7] == 'o' && gameBoard.fields[8] == 'o') {
-            return -10;
-        } else if (gameBoard.fields[0] == 'x' && gameBoard.fields[3] == 'x' && gameBoard.fields[6] == 'x') {
-            return +10;
-        } else if (gameBoard.fields[0] == 'o' && gameBoard.fields[3] == 'o' && gameBoard.fields[6] == 'o') {
-            return -10;
-        } else if (gameBoard.fields[1] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[7] == 'x') {
-            return +10;
-        } else if (gameBoard.fields[1] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[7] == 'o') {
-            return -10;
-        } else if (gameBoard.fields[2] == 'x' && gameBoard.fields[5] == 'x' && gameBoard.fields[8] == 'x') {
-            return +10;
-        } else if (gameBoard.fields[2] == 'o' && gameBoard.fields[5] == 'o' && gameBoard.fields[8] == 'o') {
-            return -10;
-        } else if (gameBoard.fields[0] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[8] == 'x') {
-            return +10;
-        } else if (gameBoard.fields[0] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[8] == 'o') {
-            return -10;
-        } else if (gameBoard.fields[2] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[6] == 'x') {
-            return +10;
-        } else if (gameBoard.fields[2] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[6] == 'o') {
-            return -10;
-        } else if (gameBoard.fields[0] == 'x' && gameBoard.fields[1] == 'x' && gameBoard.fields[2] == 'x') {
-            return +10;
+    const evaluate = (board, max) => {
+        if (max == true) {
+            if (gameBoard.fields[0] == 'x' && gameBoard.fields[1] == 'x' && gameBoard.fields[2] == 'x') return -10;
+            if (gameBoard.fields[3] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[5] == 'x') return -10;
+            if (gameBoard.fields[6] == 'x' && gameBoard.fields[7] == 'x' && gameBoard.fields[8] == 'x') return -10;
+            if (gameBoard.fields[0] == 'x' && gameBoard.fields[3] == 'x' && gameBoard.fields[6] == 'x') return -10;
+            if (gameBoard.fields[1] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[7] == 'x') return -10;
+            if (gameBoard.fields[2] == 'x' && gameBoard.fields[5] == 'x' && gameBoard.fields[8] == 'x') return -10;
+            if (gameBoard.fields[0] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[8] == 'x') return -10;
+            if (gameBoard.fields[2] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[6] == 'x') return -10;
+            if (gameBoard.fields[0] == 'x' && gameBoard.fields[1] == 'x' && gameBoard.fields[2] == 'x') return -10;
+            if (gameBoard.fields.every(field => field !== '') == true) return 0;
+        } else {
+            if (gameBoard.fields[0] == 'o' && gameBoard.fields[1] == 'o' && gameBoard.fields[2] == 'o') return 10;
+            if (gameBoard.fields[3] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[5] == 'o') return 10;
+            if (gameBoard.fields[6] == 'o' && gameBoard.fields[7] == 'o' && gameBoard.fields[8] == 'o') return 10;
+            if (gameBoard.fields[0] == 'o' && gameBoard.fields[3] == 'o' && gameBoard.fields[6] == 'o') return 10;
+            if (gameBoard.fields[1] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[7] == 'o') return 10;
+            if (gameBoard.fields[2] == 'o' && gameBoard.fields[5] == 'o' && gameBoard.fields[8] == 'o') return 10;
+            if (gameBoard.fields[0] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[8] == 'o') return 10;
+            if (gameBoard.fields[2] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[6] == 'o') return 10;
+            if (gameBoard.fields[0] == 'o' && gameBoard.fields[1] == 'o' && gameBoard.fields[2] == 'o') return 10;
+            if (gameBoard.fields.every(field => field !== '') == true) return 0;
         }
-    };
+    }
 
     const findbestmove = (board) => {
-        let bestval = -1000;
-        let bestmove = -1;
-
+        // let depth = window.depth;
+        let bestval = -Infinity;
+        let bestmove;
         for (let i = 0; i < 9; i++) {
-
             if (board[i] == '') {
-                board[i] = 'x';
-                let moveval = minimax(board, 8, true);
-                console.log('MOVEVAL :' + moveval);
+                board[i] = 'o';
+                let moveval = minimax(board, 0, false);
                 board[i] = '';
-
                 if (moveval > bestval) {
                     bestmove = i;
                     bestval = moveval;
                 }
             }
         }
-        console.log('BEST :' + bestmove);
         return bestmove;
     }
 
     const minimax = (board, depth, max) => {
-        let score = gamePlay.evaluate(board);
-
+        let score = evaluate(board, max);
         if (score == 10)
             return score;
         if (score == -10)
             return score;
-        if (gameBoard.fields.every(field => field !== '') == true) return 0;
+        if (score == 0)
+            return score;
         if (max == true) {
             let best = -Infinity;
-
             for (let i = 0; i < 9; i++) {
-
                 if (board[i] == '') {
-                    board[i] = 'x';
-                    best = Math.max(best, minimax(board, depth - 1, false));
+                    board[i] = 'o';
+                    best = Math.max(best, minimax(board, depth + 1, false));
                     board[i] = '';
                 }
             }
             let result = best - depth;
-            console.log('MAX:' + result);
             return result;
-        }
-        else if (max == false) {
+        } else {
             let best = Infinity;
             for (let i = 0; i < 9; i++) {
-
                 if (board[i] == '') {
-                    board[i] = 'o';
-                    best = Math.min(best, minimax(board, depth - 1, true));
+                    board[i] = 'x';
+                    best = Math.min(best, minimax(board, depth + 1, true));
                     board[i] = '';
                 }
             }
             let result = best + depth;
-            console.log('MIN:' + result);
             return result;
         }
     }
-    return { playermove, evaluate, minimax, findbestmove }
+    return { playermove, minimax }
 })();
 
 //GAMEBOARD UI
 const gameBoard = (function () {
 
-    let fields = ['', '', '', '', '', '', '', '', ''];
+    let fields = Array(9).fill('');
 
     const init = () => {
         gamePlay.brain = 'stupid';
@@ -244,8 +240,8 @@ const gameBoard = (function () {
 
     const reset = () => {
         gamePlay.gameover = false;
-        gameBoard.fields = ['', '', '', '', '', '', '', '', ''];
-        fields = ['', '', '', '', '', '', '', '', ''];
+        gameBoard.fields = Array(9).fill('');
+        fields = Array(9).fill('');
         const board = document.querySelector('.playingboard');
         board.innerHTML = '';
         for (let i = 0; i < fields.length; i++) {
@@ -257,33 +253,40 @@ const gameBoard = (function () {
         }
     };
     return { fields, init, reset, update }
-
 })();
 
 //EVENT LISTENERS
 window.brain = 0;
-
 document.addEventListener('DOMContentLoaded', gameBoard.init)
-
 const board = document.querySelector('.playingboard');
 board.addEventListener('mouseup', gamePlay.playermove);
-
 const choicebtn = document.querySelector('.choicebtn');
 choicebtn.addEventListener('mouseup', highlight);
 
 function highlight(e) {
     if (e.originalTarget.className == 'stupid') {
         e.originalTarget.classList.add('highlight');
-        const other = document.querySelector('.smart')
-        other.classList.remove('highlight');
+        const other1 = document.querySelector('.smart')
+        const other2 = document.querySelector('.smarter')
+        other1.classList.remove('highlight');
+        other2.classList.remove('highlight');
         window.brain = 0;
         gameBoard.reset();
-
     } if (e.originalTarget.className == 'smart') {
         e.originalTarget.classList.add('highlight');
         const other = document.querySelector('.stupid')
+        const other2 = document.querySelector('.smarter')
         other.classList.remove('highlight');
+        other2.classList.remove('highlight');
         window.brain = 1;
+        gameBoard.reset();
+    } if (e.originalTarget.className == 'smarter') {
+        e.originalTarget.classList.add('highlight');
+        const other = document.querySelector('.stupid')
+        const other2 = document.querySelector('.smart')
+        other.classList.remove('highlight');
+        other2.classList.remove('highlight');
+        window.brain = 2;
         gameBoard.reset();
     }
 }

@@ -130,26 +130,26 @@ const gamePlay = (function () {
 
     const evaluate = (board, max) => {
         if (max == true) {
-            if (gameBoard.fields[0] == 'x' && gameBoard.fields[1] == 'x' && gameBoard.fields[2] == 'x') return -10;
-            if (gameBoard.fields[3] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[5] == 'x') return -10;
-            if (gameBoard.fields[6] == 'x' && gameBoard.fields[7] == 'x' && gameBoard.fields[8] == 'x') return -10;
-            if (gameBoard.fields[0] == 'x' && gameBoard.fields[3] == 'x' && gameBoard.fields[6] == 'x') return -10;
-            if (gameBoard.fields[1] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[7] == 'x') return -10;
-            if (gameBoard.fields[2] == 'x' && gameBoard.fields[5] == 'x' && gameBoard.fields[8] == 'x') return -10;
-            if (gameBoard.fields[0] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[8] == 'x') return -10;
-            if (gameBoard.fields[2] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[6] == 'x') return -10;
-            if (gameBoard.fields[0] == 'x' && gameBoard.fields[1] == 'x' && gameBoard.fields[2] == 'x') return -10;
+            if (gameBoard.fields[0] == 'x' && gameBoard.fields[1] == 'x' && gameBoard.fields[2] == 'x') return -25;
+            if (gameBoard.fields[3] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[5] == 'x') return -25;
+            if (gameBoard.fields[6] == 'x' && gameBoard.fields[7] == 'x' && gameBoard.fields[8] == 'x') return -25;
+            if (gameBoard.fields[0] == 'x' && gameBoard.fields[3] == 'x' && gameBoard.fields[6] == 'x') return -25;
+            if (gameBoard.fields[1] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[7] == 'x') return -25;
+            if (gameBoard.fields[2] == 'x' && gameBoard.fields[5] == 'x' && gameBoard.fields[8] == 'x') return -25;
+            if (gameBoard.fields[0] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[8] == 'x') return -25;
+            if (gameBoard.fields[2] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[6] == 'x') return -25;
+            if (gameBoard.fields[0] == 'x' && gameBoard.fields[1] == 'x' && gameBoard.fields[2] == 'x') return -25;
             if (gameBoard.fields.every(field => field !== '') == true) return 0;
         } else {
-            if (gameBoard.fields[0] == 'o' && gameBoard.fields[1] == 'o' && gameBoard.fields[2] == 'o') return 10;
-            if (gameBoard.fields[3] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[5] == 'o') return 10;
-            if (gameBoard.fields[6] == 'o' && gameBoard.fields[7] == 'o' && gameBoard.fields[8] == 'o') return 10;
-            if (gameBoard.fields[0] == 'o' && gameBoard.fields[3] == 'o' && gameBoard.fields[6] == 'o') return 10;
-            if (gameBoard.fields[1] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[7] == 'o') return 10;
-            if (gameBoard.fields[2] == 'o' && gameBoard.fields[5] == 'o' && gameBoard.fields[8] == 'o') return 10;
-            if (gameBoard.fields[0] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[8] == 'o') return 10;
-            if (gameBoard.fields[2] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[6] == 'o') return 10;
-            if (gameBoard.fields[0] == 'o' && gameBoard.fields[1] == 'o' && gameBoard.fields[2] == 'o') return 10;
+            if (gameBoard.fields[0] == 'o' && gameBoard.fields[1] == 'o' && gameBoard.fields[2] == 'o') return 25;
+            if (gameBoard.fields[3] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[5] == 'o') return 25;
+            if (gameBoard.fields[6] == 'o' && gameBoard.fields[7] == 'o' && gameBoard.fields[8] == 'o') return 25;
+            if (gameBoard.fields[0] == 'o' && gameBoard.fields[3] == 'o' && gameBoard.fields[6] == 'o') return 25;
+            if (gameBoard.fields[1] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[7] == 'o') return 25;
+            if (gameBoard.fields[2] == 'o' && gameBoard.fields[5] == 'o' && gameBoard.fields[8] == 'o') return 25;
+            if (gameBoard.fields[0] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[8] == 'o') return 25;
+            if (gameBoard.fields[2] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[6] == 'o') return 25;
+            if (gameBoard.fields[0] == 'o' && gameBoard.fields[1] == 'o' && gameBoard.fields[2] == 'o') return 25;
             if (gameBoard.fields.every(field => field !== '') == true) return 0;
         }
     }
@@ -175,9 +175,9 @@ const gamePlay = (function () {
 
     const minimax = (board, depth, node, max, alpha, beta) => {
         let score = evaluate(board, max);
-        if (score == 10)
+        if (score == 25)
             return score;
-        if (score == -10)
+        if (score == -25)
             return score;
         if (score == 0)
             return score;
@@ -189,11 +189,14 @@ const gamePlay = (function () {
                     best = Math.max(best, minimax(board, depth + 1, node * 2 + i, false, alpha, beta));
                     alpha = Math.max(alpha, best);
                     board[i] = '';
-                    if (beta <= alpha)
+                    if (beta <= alpha) {
+                        console.log('break');
                         break;
+                    }
                 }
             }
-            let result = best - depth;
+            let result = best - (depth * 2);
+            console.log(result);
             return result;
         } else {
             let best = beta;
@@ -203,11 +206,14 @@ const gamePlay = (function () {
                     best = Math.min(best, minimax(board, depth + 1, node * 2 + i, true, alpha, beta));
                     beta = Math.min(beta, best);
                     board[i] = '';
-                    if (beta <= alpha)
+                    if (beta <= alpha) {
+                        console.log('break');
                         break;
+                    }
                 }
             }
-            let result = best + depth;
+            let result = best + (depth * 2);
+            console.log(result);
             return result;
         }
     }

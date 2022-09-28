@@ -155,12 +155,14 @@ const gamePlay = (function () {
     }
 
     const findbestmove = (board) => {
+        let Min = -1000;
+        let Max = 1000;
         let bestval = -Infinity;
         let bestmove;
         for (let i = 0; i < 9; i++) {
             if (board[i] == '') {
                 board[i] = 'o';
-                let moveval = minimax(board, 0, false);
+                let moveval = minimax(board, 0, 0, false, Min, Max);
                 board[i] = '';
                 if (moveval > bestval) {
                     bestmove = i;
@@ -171,7 +173,7 @@ const gamePlay = (function () {
         return bestmove;
     }
 
-    const minimax = (board, depth, max) => {
+    const minimax = (board, depth, node, max, alpha, beta) => {
         let score = evaluate(board, max);
         if (score == 10)
             return score;
@@ -180,23 +182,29 @@ const gamePlay = (function () {
         if (score == 0)
             return score;
         if (max == true) {
-            let best = -Infinity;
+            let best = alpha;
             for (let i = 0; i < 9; i++) {
                 if (board[i] == '') {
                     board[i] = 'o';
-                    best = Math.max(best, minimax(board, depth + 1, false));
+                    best = Math.max(best, minimax(board, depth + 1, node * 2 + i, false, alpha, beta));
+                    alpha = Math.max(alpha, best);
                     board[i] = '';
+                    if (beta <= alpha)
+                        break;
                 }
             }
             let result = best - depth;
             return result;
         } else {
-            let best = Infinity;
+            let best = beta;
             for (let i = 0; i < 9; i++) {
                 if (board[i] == '') {
                     board[i] = 'x';
-                    best = Math.min(best, minimax(board, depth + 1, true));
+                    best = Math.min(best, minimax(board, depth + 1, node * 2 + i, true, alpha, beta));
+                    beta = Math.min(beta, best);
                     board[i] = '';
+                    if (beta <= alpha)
+                        break;
                 }
             }
             let result = best + depth;

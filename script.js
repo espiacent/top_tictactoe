@@ -20,7 +20,7 @@ const gamePlay = (function () {
     }
 
     const aimove = () => {
-        if (window.brain == 0) {
+        if (brain == 0) {
             if (Math.random() < 0.5) {
                 gameBoard.fields[findbestmove(gameBoard.fields)] = 'o';
             } else {
@@ -33,7 +33,7 @@ const gamePlay = (function () {
                 gameBoard.fields[random] = 'o';
             }
         }
-        if (window.brain == 1) {
+        if (brain == 1) {
             if (Math.random() < 0.8) {
                 gameBoard.fields[findbestmove(gameBoard.fields)] = 'o';
             } else {
@@ -46,7 +46,7 @@ const gamePlay = (function () {
                 gameBoard.fields[random] = 'o';
             }
         }
-        if (window.brain == 2) {
+        if (brain == 2) {
             gameBoard.fields[findbestmove(gameBoard.fields)] = 'o';
         }
         gameBoard.update();
@@ -269,7 +269,7 @@ const gameBoard = (function () {
 })();
 
 //EVENT LISTENERS
-window.brain = 0;
+var brain = 0;
 document.addEventListener('DOMContentLoaded', gameBoard.init)
 const board = document.querySelector('.playingboard');
 board.addEventListener('mouseup', gamePlay.playermove);
@@ -283,7 +283,7 @@ function highlight(e) {
         const other2 = document.querySelector('.smarter')
         other1.classList.remove('highlight');
         other2.classList.remove('highlight');
-        window.brain = 0;
+        brain = 0;
         gameBoard.reset();
     } if (e.originalTarget.className == 'smart') {
         e.originalTarget.classList.add('highlight');
@@ -291,7 +291,7 @@ function highlight(e) {
         const other2 = document.querySelector('.smarter')
         other.classList.remove('highlight');
         other2.classList.remove('highlight');
-        window.brain = 1;
+        brain = 1;
         gameBoard.reset();
     } if (e.originalTarget.className == 'smarter') {
         e.originalTarget.classList.add('highlight');
@@ -299,7 +299,7 @@ function highlight(e) {
         const other2 = document.querySelector('.smart')
         other.classList.remove('highlight');
         other2.classList.remove('highlight');
-        window.brain = 2;
+        brain = 2;
         gameBoard.reset();
     }
 }

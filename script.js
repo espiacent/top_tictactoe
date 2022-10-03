@@ -126,7 +126,7 @@ const gamePlay = (function () {
                 gameBoard.reset();
             })
         }
-    }
+    };
 
     const evaluate = (board, max) => {
         if (max == true) {
@@ -152,7 +152,7 @@ const gamePlay = (function () {
             if (gameBoard.fields[0] == 'o' && gameBoard.fields[1] == 'o' && gameBoard.fields[2] == 'o') return 25;
             if (gameBoard.fields.every(field => field !== '') == true) return 0;
         }
-    }
+    };
 
     const findbestmove = (board) => {
         let Min = -1000;
@@ -171,7 +171,7 @@ const gamePlay = (function () {
             }
         }
         return bestmove;
-    }
+    };
 
     const minimax = (board, depth, node, max, alpha, beta) => {
         let score = evaluate(board, max);
@@ -216,7 +216,7 @@ const gamePlay = (function () {
             console.log(result);
             return result;
         }
-    }
+    };
     return { playermove, minimax }
 })();
 
@@ -237,7 +237,7 @@ const gameBoard = (function () {
             square.innerText = fields[i];
             board.appendChild(square);
         }
-    }
+    };
 
     const update = () => {
         const board = document.querySelector('.playingboard');
@@ -302,4 +302,4 @@ function highlight(e) {
         brain = 2;
         gameBoard.reset();
     }
-}
+};

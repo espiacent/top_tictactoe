@@ -204,13 +204,11 @@ const gamePlay = (function () {
                     alpha = Math.max(alpha, best);
                     board[i] = '';
                     if (beta <= alpha) {
-                        console.log('break');
                         break;
                     }
                 }
             }
             let result = best - (depth * 2);
-            console.log(result);
             return result;
         } else {
             let best = beta;
@@ -221,13 +219,11 @@ const gamePlay = (function () {
                     beta = Math.min(beta, best);
                     board[i] = '';
                     if (beta <= alpha) {
-                        console.log('break');
                         break;
                     }
                 }
             }
             let result = best + (depth * 2);
-            console.log(result);
             return result;
         }
     };

@@ -58,38 +58,52 @@ const gamePlay = (function () {
     const checkwin = () => {
         if (gameBoard.fields[0] == 'x' && gameBoard.fields[1] == 'x' && gameBoard.fields[2] == 'x') {
             winmsg('x');
+            drawLine(ctx, [20, 25], [280, 25], 'red', 4);
         } else if (gameBoard.fields[0] == 'o' && gameBoard.fields[1] == 'o' && gameBoard.fields[2] == 'o') {
+            drawLine(ctx, [20, 25], [280, 25], 'red', 4);
             winmsg('o');
         } else if (gameBoard.fields[3] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[5] == 'x') {
             winmsg('x');
+            drawLine(ctx, [20, 75], [280, 75], 'red', 4);
         } else if (gameBoard.fields[3] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[5] == 'o') {
             winmsg('o');
+            drawLine(ctx, [20, 75], [280, 75], 'red', 4);
         } else if (gameBoard.fields[6] == 'x' && gameBoard.fields[7] == 'x' && gameBoard.fields[8] == 'x') {
             winmsg('x');
+            drawLine(ctx, [20, 125], [280, 125], 'red', 4);
         } else if (gameBoard.fields[6] == 'o' && gameBoard.fields[7] == 'o' && gameBoard.fields[8] == 'o') {
             winmsg('o');
+            drawLine(ctx, [20, 125], [280, 125], 'red', 4);
         } else if (gameBoard.fields[0] == 'x' && gameBoard.fields[3] == 'x' && gameBoard.fields[6] == 'x') {
             winmsg('x');
+            drawLine(ctx, [50, 20], [50, 130], 'red', 6);
         } else if (gameBoard.fields[0] == 'o' && gameBoard.fields[3] == 'o' && gameBoard.fields[6] == 'o') {
             winmsg('o');
+            drawLine(ctx, [50, 20], [50, 130], 'red', 6);
         } else if (gameBoard.fields[1] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[7] == 'x') {
             winmsg('x');
+            drawLine(ctx, [150, 20], [150, 130], 'red', 6);
         } else if (gameBoard.fields[1] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[7] == 'o') {
             winmsg('o');
+            drawLine(ctx, [150, 20], [150, 130], 'red', 6);
         } else if (gameBoard.fields[2] == 'x' && gameBoard.fields[5] == 'x' && gameBoard.fields[8] == 'x') {
             winmsg('x');
+            drawLine(ctx, [250, 20], [250, 130], 'red', 6);
         } else if (gameBoard.fields[2] == 'o' && gameBoard.fields[5] == 'o' && gameBoard.fields[8] == 'o') {
             winmsg('o');
+            drawLine(ctx, [250, 20], [250, 130], 'red', 6);
         } else if (gameBoard.fields[0] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[8] == 'x') {
             winmsg('x');
+            drawLine(ctx, [30, 15], [260, 130], 'red', 5);
         } else if (gameBoard.fields[0] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[8] == 'o') {
             winmsg('o');
+            drawLine(ctx, [30, 15], [260, 130], 'red', 5);
         } else if (gameBoard.fields[2] == 'x' && gameBoard.fields[4] == 'x' && gameBoard.fields[6] == 'x') {
             winmsg('x');
+            drawLine(ctx, [250, 25], [40, 130], 'red', 4);
         } else if (gameBoard.fields[2] == 'o' && gameBoard.fields[4] == 'o' && gameBoard.fields[6] == 'o') {
             winmsg('o');
-        } else if (gameBoard.fields[0] == 'x' && gameBoard.fields[1] == 'x' && gameBoard.fields[2] == 'x') {
-            winmsg('x');
+            drawLine(ctx, [250, 25], [40, 130], 'red', 4);
         } else if (gameBoard.fields.every(field => field !== '')) {
             winmsg('draw');
         }
@@ -252,6 +266,7 @@ const gameBoard = (function () {
     };
 
     const reset = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         gamePlay.gameover = false;
         gameBoard.fields = Array(9).fill('');
         fields = Array(9).fill('');
@@ -275,6 +290,24 @@ const board = document.querySelector('.playingboard');
 board.addEventListener('mouseup', gamePlay.playermove);
 const choicebtn = document.querySelector('.choicebtn');
 choicebtn.addEventListener('mouseup', highlight);
+
+const canvas = document.querySelector('.canvas');
+const ctx = canvas.getContext('2d');
+
+function drawLine(ctx, begin, end, stroke = 'black', width = 1) {
+    if (stroke) {
+        ctx.strokeStyle = stroke;
+    }
+
+    if (width) {
+        ctx.lineWidth = width;
+        ctx.lineCap = 'square';
+    }
+    ctx.beginPath();
+    ctx.moveTo(...begin);
+    ctx.lineTo(...end);
+    ctx.stroke();
+}
 
 function highlight(e) {
     if (e.originalTarget.className == 'stupid') {

@@ -16,6 +16,17 @@ h3 {
     margin-bottom: 10px;
 }
 
+.canvas {
+    background-color: #97999100;
+    position: absolute;
+    width: 420px;
+    height: 420px;
+    z-index: -1;
+    top: 50%;
+    left: 50%;
+    translate: -51% -36%;
+}
+
 .choicebtn {
     text-align: center;
     margin-bottom: 90px;
@@ -26,6 +37,10 @@ h3 {
 }
 
 .playingboard {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -51% -50%;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;

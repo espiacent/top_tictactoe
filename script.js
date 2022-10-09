@@ -6,6 +6,9 @@ const gamePlay = (function () {
         if (gameBoard.fields[e.target.id.at(-1)] == '') {
             gameBoard.fields[e.target.id.at(-1)] = 'x';
             gameBoard.update();
+            const audio1 = document.getElementById('audio1');
+            audio1.volume = 0.7;
+            audio1.play();
             const page = document.querySelector('body');
             page.style.pointerEvents = 'none'
             checkwin();
@@ -50,6 +53,9 @@ const gamePlay = (function () {
             gameBoard.fields[findbestmove(gameBoard.fields)] = 'o';
         }
         gameBoard.update();
+        const audio2 = document.getElementById('audio2');
+        audio2.volume = 0.7;
+        audio2.play();
         const page = document.querySelector('body');
         page.style.pointerEvents = 'auto'
         checkwin();
@@ -115,6 +121,10 @@ const gamePlay = (function () {
         page.style.pointerEvents = 'auto'
         if (player == 'draw') {
             // show modal
+            const audio4 = document.getElementById('audio4');
+            audio4.volume = 0.1;
+            audio4.play();
+            console.log('draw');
             const modal = document.querySelector('.modal-outer');
             const header = document.querySelector('.modal-header');
             header.textContent = 'Round draw!';
@@ -128,6 +138,10 @@ const gamePlay = (function () {
             })
         } else {
             // show modal
+            const audio3 = document.getElementById('audio3');
+            audio3.volume = 0.9;
+            audio3.play();
+            console.log('win');
             const modal = document.querySelector('.modal-outer');
             const header = document.querySelector('.modal-header');
             header.textContent = `${player} wins!`;
@@ -236,6 +250,9 @@ const gameBoard = (function () {
     let fields = Array(9).fill('');
 
     const init = () => {
+        const audio5 = document.getElementById('audio5');
+        audio5.volume = 0.15;
+        audio5.play();
         gamePlay.brain = 'stupid';
         const other = document.querySelector('.stupid')
         other.classList.add('highlight');
